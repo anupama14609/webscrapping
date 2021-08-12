@@ -11,8 +11,8 @@ urlpatterns = [
     path('blog', views.Blog, name="blog"),
     # path('<str:slug>', views.BlogPost, name="blogpost"),
     path('price-tracker', views.priceTracker, name='price-tracker'),
-    path('delete/<pk>/', views.LinkDeleteView.as_view(), name="delete"),
-    path('update', views.update_prices, name="update-prices"),
+    path('delete/<pk>', views.LinkDeleteView.as_view(), name="delete"),
+    path('update-prices', views.update_prices, name="update-prices"),
   
 ]
 
