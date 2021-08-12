@@ -1,46 +1,67 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %} Word Dictionary{%endblock title %}
 
 {% block active %}active {%endblock active %}
 
 {% block body %} 
-<div class="jumbotron">
-    <div class="container w-50 my-3">
-      <div class="container btn btn-primary">
-          <h1>Meta Tags Generator</h1>
+<!-- Add Meta Modal -->
+<div class="modal fade" id="addMetaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Link For Metadata Analysis</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <br><br><br>
-      <div class="mb-3">
-          <form action="" method="post">
-              {% csrf_token %}
-              <input type="text" class="form-control" name="word" id="exampleFormControlInput1" placeholder="Search Word..."><br>
-              <input type="submit" name="" class="btn btn-success" value="Search">
-          </form>
+      <div class="modal-body">
+        <form action="" method="POST" autocomplete="off">
+          {% csrf_token %}
+          {{form|crispy}}
+          <button type="submit" class="btn btn-primary">Add Meta</button>
+        </form>
       </div>
-      <hr>
-      <h4 class="text-danger">{{word}}</h4>
-      <h5 class="text-info">{{text}}</h5>
-      </div>
+    </div>
   </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col text-left">
+    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#addMetaModal">Add</button>
+    <a href="">
+    <button class="btn btn-info">Update</button>
+  </a>
+  </div>
+
+  <div class="col text-right"> 
+    <div>View Meta History</div>
+  </div>
+</div>
+
+{% if queryset %}
+    {% for metas in queryset %}
+    <div class="card mt-3">
+      <div class="card-header">
+        <h5>{{metas.title}}</h5>
+        <a href=""><button class="btn btn-danger">Delete</button></a>
+      </div>
+      <div class="card-body">
+        <div class="blockquote">
+          <div>Meta Description : {{metas.desc}}</div>
+          <div>Meta Keywords : {{metas.keywords}}</div>
+          <div>Time: {{metas.timeStamp}}</div>
+          <div>Link: <a href="{{item.url}}">{{item.url}}</a></div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+{% else %}
+<h3>No Data Available yet.................</h3>
+
+{% endif %}
 {%endblock body %}
 
-{% block pagination %}
-<nav aria-label="...">
-    <ul class="pagination">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item active" aria-current="page">
-        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
-      </li>
-    </ul>
-  </nav>
-{%endblock pagination %}
 
 {% block script %} {%endblock script %}

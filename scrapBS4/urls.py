@@ -13,6 +13,7 @@ urlpatterns = [
     path('price-tracker', views.priceTracker, name='price-tracker'),
     path('delete/<pk>', views.LinkDeleteView.as_view(), name="delete"),
     path('update-prices', views.update_prices, name="update-prices"),
+    path('search-word', views.SearchWord, name='search-word'),
   
 ]
 

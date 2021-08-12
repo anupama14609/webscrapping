@@ -1,5 +1,5 @@
 from django.db import models
-from .utils import get_link_data, get_dict_data
+from .utils import get_link_data, get_dict_data,get_link_meta
 
 # Create your models here.
 class Link(models.Model):
@@ -43,10 +43,31 @@ class WordDictionary(models.Model):
         return str(self.word)
 
     class Meta:
-        ordering = ('timeStamp',)
+        ordering = ('-timeStamp',)
 
     def save(self, *args, **kwargs):
         word, meaning = get_dict_data(self.word)
         self.search = word
         self.meaning = meaning
         super().save(*args, **kwargs)
+
+class GenerateMeta(models.Model):
+    title = models.CharField(max_length=70)
+    desc = models.CharField(max_length=160)
+    keywords = models.CharField(max_length=500)
+    url = models.URLField()
+    timeStamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.title)
+
+    class Meta:
+       ordering = ('-timeStamp',)
+
+    def save(self, *args, **kwargs):
+        title, desc, keywords = get_link_meta(self.url)
+        self.title = title
+        self.desc = desc
+        self.keywords = keywords
+        super().save(*args,**kwargs)
+

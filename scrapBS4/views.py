@@ -1,11 +1,13 @@
 from django.shortcuts import render,redirect 
 from PyDictionary import PyDictionary
 import requests
-from .forms import AddLinkForm, AddDictForm
-from .models import Link, WordDictionary
+from .forms import AddLinkForm, AddDictForm, GenerateMetaForm
+from .models import GenerateMeta, Link, WordDictionary
 from django.views.generic import DeleteView
 from django.urls import reverse_lazy 
-
+from bs4 import BeautifulSoup
+import requests
+import lxml
 
 # Create your views here.
 def index(request):
@@ -64,8 +66,7 @@ def wordDictionary(request):
      form = AddDictForm(request.POST or None)
 
      if request.method == 'POST':
-
-          try:
+          try:           
                if form.is_valid():
                     form.save()
           except:
@@ -74,16 +75,48 @@ def wordDictionary(request):
      form = AddDictForm()
      queryset = WordDictionary.objects.all().order_by('-timeStamp')
      print(queryset)
+    
      context =  {
           'queryset':queryset,
           'form':form,
           'error':error,
      }
      return render(request, 'scrapbs4/dictionary.html', context)
-                         
+
+def SearchWord(request): 
+     error = ""   
+     if request.method == "POST":      
+          word = request.POST['word']
+          url = 'https://www.dictionary.com/browse/'+word 
+          r = requests.get(url)
+          data = r.content
+          soup = BeautifulSoup(data, 'html.parser')
+          span = soup.find_all('span', {"class": "one-click-content"})
+          context = {'text': span[0].text, 'word': word}
+          return render(request, 'scrapbs4/dictionary.html', context)
+     else:
+          context = {'error': "Something Went Wrong..."}
+          return render(request, 'scrapbs4/dictionary.html', context)
 
 def metaGenerator(request):
-     return render(request, 'scrapbs4/metagenerator.html')  
+     error = ""
+     form = GenerateMetaForm(request.POST or None)
+     if request.method == 'POST':
+          try:
+               if form.is_valid():
+                    form.save()
+          except:
+               error = "something went wrong........."
+
+     form = GenerateMetaForm()
+     queryset = GenerateMeta.objects.all()
+     context = {
+        'queryset':queryset,
+        'form':form,
+        'error':error,
+     }
+
+     return render(request, 'scrapbs4/metagenerator.html', context)  
 
 def textGenerator(request):
      return render(request, 'scrapbs4/textgenerator.html')

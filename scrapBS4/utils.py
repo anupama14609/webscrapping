@@ -32,3 +32,21 @@ def get_dict_data(word):
 
     return search, meaning
    
+def get_link_meta(url):
+    headers = {
+        "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36",
+        "Accept-Language":"en-GB,en-US;q=0.9,en;q=0.8"
+    }
+
+    metares = requests.get(url, headers=headers)
+    soup = BeautifulSoup(metares.text, "lxml")
+    title = soup.find('title').getText()
+    metas = soup.find_all('meta')
+    description = [ meta.attrs['content'] for meta in metas if 'name' in meta.attrs and meta.attrs['name'] == 'description' ]
+    keywords = [meta.attrs['content'] for meta in metas if 'name' in meta.attrs and meta.attrs['name'] == 'keywords']
+  
+    return title, description, keywords
+
+
+url = 'https://www.sigmasoftwares.org/'
+print(get_link_meta(url))

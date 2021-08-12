@@ -70,11 +70,16 @@
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">Search For Word............</h5>
-    <form action="" method='POST' autocomplete="">
-      {% csrf_token %}
-      {{form|crispy}}         
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+    <div class="mb-3">
+      <form action="{% url 'search-word' %}" method="post">
+          {% csrf_token %}
+          <input type="text" class="form-control" name="word" id="searchDict" placeholder="Search Word..."><br>
+          <input type="submit" name="" class="btn btn-success" value="Search">
+      </form>
+  </div>
+  <hr>
+  <h4 class="text-danger">{{word}}</h4>
+  <h5 class="text-info">{{text}}</h5>
     
   </div>
 </div>
