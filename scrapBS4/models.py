@@ -1,5 +1,5 @@
 from django.db import models
-from .utils import get_link_data
+from .utils import get_link_data, get_dict_data
 
 # Create your models here.
 class Link(models.Model):
@@ -32,3 +32,21 @@ class Link(models.Model):
         self.name = name
         self.current_price = price 
         super().save(*args,**kwargs)
+
+class WordDictionary(models.Model):
+    word = models.CharField(max_length=120)
+    search = models.CharField(max_length=120, blank=True)
+    meaning = models.CharField(max_length=500, blank=True)
+    timeStamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.word)
+
+    class Meta:
+        ordering = ('timeStamp',)
+
+    def save(self, *args, **kwargs):
+        word, meaning = get_dict_data(self.word)
+        self.search = word
+        self.meaning = meaning
+        super().save(*args, **kwargs)

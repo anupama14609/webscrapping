@@ -15,3 +15,4 @@ def colorize(val):
 
     return mark_safe(html_string)
 
+

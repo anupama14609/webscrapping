@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect 
 from PyDictionary import PyDictionary
-from .forms import AddLinkForm
-from .models import Link 
+import requests
+from .forms import AddLinkForm, AddDictForm
+from .models import Link, WordDictionary
 from django.views.generic import DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy 
+
 
 # Create your views here.
 def index(request):
@@ -50,7 +52,6 @@ class LinkDeleteView(DeleteView):
      template_name = 'scrapbs4/confirm_del.html'
      success_url = reverse_lazy('price-tracker')
 
-
 def update_prices(request):
      queryset = Link.objects.all()
      for link in queryset:
@@ -58,25 +59,29 @@ def update_prices(request):
 
      return redirect('price-tracker')     
 
-
-
-
-
 def wordDictionary(request): 
-     search = request.GET.get('word') 
-     dictionary =  PyDictionary()
-     meaning = dictionary.meaning(search)
-     synonyms = dictionary.synonym(search)
-     antonyms = dictionary.antonym(search)
-     context = {
-          'meaning':meaning['Noun'][0:],
-          'word':search,
-          "synonyms":synonyms,
-          'antonyms':antonyms,
+     error = ""
+     form = AddDictForm(request.POST or None)
+
+     if request.method == 'POST':
+
+          try:
+               if form.is_valid():
+                    form.save()
+          except:
+               error = "Something Went Wrong..." 
+    
+     form = AddDictForm()
+     queryset = WordDictionary.objects.all().order_by('-timeStamp')
+     print(queryset)
+     context =  {
+          'queryset':queryset,
+          'form':form,
+          'error':error,
      }
-     return render(request, 'scrapbs4/dictionary.html',context)
-   
-                    
+     return render(request, 'scrapbs4/dictionary.html', context)
+                         
+
 def metaGenerator(request):
      return render(request, 'scrapbs4/metagenerator.html')  
 
