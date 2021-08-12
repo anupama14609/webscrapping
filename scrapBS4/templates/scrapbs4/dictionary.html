@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %} Word Dictionary{%endblock title %}
+
+{% block active %}active {%endblock active %}
+
+{% block body %} 
+<div class="jumbotron my-2">
+  {% for message in messages  %}            
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message : </strong> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+  {% endfor %}    
+  
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title bg-dark p-3 text-white text-center">Word Meaning Dictionary Web Application</h5>
+    </div>
+  </div>
+      <div class="mb-3">
+          <form action="word-dictionary">
+              <input type="text" class="form-control my-2" name="word" id="word" placeholder="Search Word...">
+              <button type="submit" class="btn btn-success btn-block">Search</button>
+          </form>
+      </div>
+      <hr>
+
+      <h5>Word: {{word}}</h5>
+      <h6>Meaning: {{meaning}}</h6>
+      </div>
+  </div>
+{%endblock body %}
+
+{% block pagination %}
+{%endblock pagination %}
+
+{% block script %} {%endblock script %}
