@@ -19,7 +19,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        {{error}}
+      
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Warning: </strong> {{error}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
        <div class="modal-body">
           <form action="" method="POST" autocomplete="off">
             {% csrf_token %}
